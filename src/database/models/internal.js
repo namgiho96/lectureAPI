@@ -16,7 +16,7 @@ class ModelManager {
     }
     getModelFileList() {
         return [
-            'user.js',
+            'user.js', 'admin.js','lecture.js','lectureUser.js','keyword.js','lectureKeyword.js'
         ];
     }
 
@@ -24,9 +24,9 @@ class ModelManager {
         try {
             const fileNameList = this.getModelFileList();
             const db = {};
-            const modelOptions = process.env.NODE_ENV === 'product' ? {alter: true} : {alter: true};
+            const modelOptions = process.env.NODE_ENV === 'product' ? {alter: true} : {};
             for(const fileName of fileNameList) {
-                const model = require('./user.js');
+                const model = require(`./${fileName}`);
                 model.initModel(sequelize);
                 await model.sync(modelOptions);
                 db[model.name] = model;
@@ -52,6 +52,21 @@ class ModelManager {
     }
     get Lecture() {
         return require('./lecture');
+    }
+    get LectureUser() {
+        return require('./lectureUser');
+    }
+
+    get LectureKeyword() {
+        return require('./lectureKeyword');
+    }
+
+    get Keyword() {
+        return require('./keyword');
+    }
+
+    get Admin() {
+        return require('./admin');
     }
 
     static getInstance() {

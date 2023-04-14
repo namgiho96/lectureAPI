@@ -1,4 +1,4 @@
-// const { USER_SESSION_EXPIRE_TIME } = etsSpotCommon.enum;
+const {ParameterError, NotFoundError404} = require('../module/error');
 
 
 
@@ -14,10 +14,8 @@ exports.validateParameter = function(checkArray, parameters) {
 exports.errorHandler = async (result, req, res, next) => {
     if(!(result instanceof Error) && result['status']) {
         const inputUrl = req.originalUrl.split('?')[0];
-        // if(!inputUrl.match('getOhlc')) {
-        //     await logger.infoConsole(`[Output] ${(req.user && req.user.userName) ? req.user.userName : 'public'} - ${inputUrl}`,
-        //         {query: req.query, params:req.params, body: req.body});
-        // }
+        logger.infoConsole(`[Output] ${(req.user && req.user.userName) ? req.user.userName : 'public'} - ${inputUrl}`,
+            {query: req.query, params:req.params, body: req.body});
         return await res.json(result);
     }
     let clientIp = '';
@@ -47,3 +45,11 @@ exports.errorHandler = async (result, req, res, next) => {
         return await logger.error(result, errorContent);
     }
 };
+
+let serverIp, os = require('os'), ifaces = os.networkInterfaces();
+for (let dev in ifaces) {
+    let iface = ifaces[dev].filter(function(details) {
+        return details.family === 'IPv4' && details.internal === false;
+    });
+    if(iface.length > 0) serverIp = iface[0].address;
+}

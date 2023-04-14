@@ -9,9 +9,9 @@ const config = require('../config/config');
 
 const adminAttributes = {
     id: {type: DataTypes.UUID, defaultValue: DataTypes.UUIDV4, primaryKey: true},
-    name: {type: DataTypes.STRING, defaultValue: ''},
-    email: {type: DataTypes.STRING, defaultValue: ''},
-    password: {type: DataTypes.STRING, defaultValue: ''},
+    name: {type: DataTypes.STRING, unique:false},
+    email: {type: DataTypes.STRING, unique:true},
+    password: {type: DataTypes.STRING, unique: true},
     salt : {type: DataTypes.STRING},
 }
 class AdminModel extends BaseModel {
@@ -23,7 +23,14 @@ class AdminModel extends BaseModel {
         AdminModel.init(adminAttributes, {
             sequelize,
             modelName: 'Admin',
-            indexes: []});
+            indexes: [{
+                unique: true,
+                fields: ['email'],
+            },
+            {
+                fields: ['name'],
+
+            }]});
     }
 
     static generateSalt() {
@@ -48,6 +55,13 @@ class AdminModel extends BaseModel {
     }
     validatePassword(enteredPassword) {
         return AdminModel.encryptPassword(enteredPassword, this.salt) === this.password
+    }
+
+    static relationModel() {
+        AdminModel.hasMany(model.Lecture, {
+            foreignKey: 'id',
+            as: 'lectures'
+        });
     }
 
 }

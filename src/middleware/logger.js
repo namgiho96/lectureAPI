@@ -3,7 +3,6 @@
 const winston = require( 'winston' );// Or read from a configuration
 const processName = process.env.NODE_NAME || "Leture-Server";
 const env  = process.env.NODE_ENV || "development";
-const config = require('../config/config');
 
 
 let myConsoleFormat = winston.format.printf(({level, message, timestamp, ...rest}) => {

@@ -54,3 +54,9 @@ exports.DatabaseError = class DatabaseError extends LetureError {
     }
 };
 
+exports.NotFoundError404 = class NotFoundError404 extends NotFoundError404 {
+    constructor(lastError) {
+        super(lastError);
+    }
+}
+
